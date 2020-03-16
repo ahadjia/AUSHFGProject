@@ -17,7 +17,7 @@ for results in range(1,4):
         header = browser.find_element_by_xpath('//*[@id="all-standard-components"]/tbody/tr['+str(results)+']/td[1]/a')
         print(header.text + str(results))
         subtitle = browser.find_element_by_xpath('//*[@id="all-standard-components"]/tbody/tr['+str(results)+']/td[2]/a')
-        pdf = browser.find_element_by_xpath('/html/body/div[3]/div/div/section/div/div[2]/section[3]/div[1]/div[3]/div[2]/table/tbody/tr['+str(results)+']/td[3]/div[2]/div/div/div/div/span/a')
+        pdf = browser.find_element_by_xpath('/html/body/div[3]/div/div/section/div/div[2]/section[3]/div[1]/div[3]/div[2]/table/tbody/tr['+str(results)+']/td[3]/div[1]/div/div/div/div/span/a')
         table.append([header.text,subtitle.text,pdf.get_attribute('href')])
     except:
         pass
@@ -25,7 +25,7 @@ for results in range(1,4):
 browser.quit()
 
 for index,url in enumerate(table):
-    local_filename = str(os.getcwd()) + '/Downloads/' + str(url[0]) + '.xlsx'
+    local_filename = str(os.getcwd()) + '/Downloads/' + str(url[0]) + '.pdf'
     r = requests.get(url[2],local_filename)
     f = open(local_filename,'wb')
     for chunk in r.iter_content(chunk_size=512 * 1024):
