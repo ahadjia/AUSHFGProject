@@ -3,7 +3,7 @@ import requests
 from selenium import webdriver
 import pandas as pd
 import xlsxwriter
-print(pd.__version__)
+
 url = 'https://www.healthfacilityguidelines.com.au/standard-components'
 
 browser = webdriver.Firefox()
@@ -25,9 +25,6 @@ for results in range(1,251):
 
 browser.quit()
 
-rowcount = 0
-database_fn = 'AUSHFG_MGAS_Database.xlsx'
-
 df = pd.DataFrame()
 
 if not os.path.exists(str(os.getcwd()) + '/Downloads/'):
@@ -35,12 +32,13 @@ if not os.path.exists(str(os.getcwd()) + '/Downloads/'):
 
 for index,url in enumerate(table):
     local_filename = str(os.getcwd()) + '/Downloads/' + str(url[0]) + '.xlsx'
-    r = requests.get(url[2],local_filename)
-    f = open(local_filename,'wb')
-    for chunk in r.iter_content(chunk_size=512 * 1024):
-        if chunk:
-            f.write(chunk)
-    df = df.append(pd.read_excel(local_filename, sheet_name=1, index_col=False, skiprows=6), ignore_index = True)
+    if not os.path.exists(local_filename):
+        r = requests.get(url[2],local_filename)
+        f = open(local_filename,'wb')
+        for chunk in r.iter_content(chunk_size=512 * 1024):
+            if chunk:
+                f.write(chunk)
+        df = df.append(pd.read_excel(local_filename, sheet_name=1, index_col=False, skiprows=6), ignore_index = True)
 
 mgas = df[df['Item Number'].str.contains('MGAS-')]
 mege = df[df['Name'].str.contains('oxygen depletion')]
